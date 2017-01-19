@@ -7,10 +7,11 @@ print("Podaj stopien mianownika")
 stopien = int(input('Stopien: '))
 A = []
 for x in range (0, stopien+1):
-    A.append(int(input(str('Podaj wspolczynnik '+ 'a' + str(x) + ": "))))
+    wspolczynnik = int(input(str('Podaj wspolczynnik '+ 'a' + str(x) + ": ")))
+    A.append(int(wspolczynnik))
 
 print(A)
-
+print("\nAby uklad mogl byc stabilny, wszystkie wspolczynniki rownania charakterystycznego musza byc wieksze od zera")
 matrix=[]
 k = 0
 
