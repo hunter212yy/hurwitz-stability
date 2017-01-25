@@ -4,5 +4,5 @@ This program takes a linear system's characteristic equation (its coefficients) 
 
 ##License
 MIT License
-**(Check LICENSE.md)**
+**(Check LICENSE.txt)**
 

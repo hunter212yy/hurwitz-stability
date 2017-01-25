@@ -9,7 +9,6 @@ A = []
 for x in range (0, stopien+1):
     wspolczynnik = int(input(str('Podaj wspolczynnik '+ 'a' + str(x) + ": ")))
     A.append(int(wspolczynnik))
-
 print(A)
 print("\nAby uklad mogl byc stabilny, wszystkie wspolczynniki rownania charakterystycznego musza byc wieksze od zera")
 matrix=[]
