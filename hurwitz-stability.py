@@ -1,28 +1,76 @@
+#!/usr/bin/env python3
+
+"""This program takes a linear system's characteristic equation (its coefficients)
+and checks the system's stability against the Hurwitz stability criterion."""
+
+__author__ = "Adam Kosuń"
+
 import numpy as np
 import sys
+
+def create_hurwitz_matrix(coefficients):
+    matrix = []
+    for _ in range(0, len(coefficients)-1):
+        column = []
+        d = 0
+        for _ in range(0, len(coefficients)-1):
+            if 2*d+1-k < 0:
+                column.append(0)
+            else:
+                try:
+                    column.append(coefficients[2*d+1-k])
+                except IndexError:
+                    column.append(0)
+            d += 1
+        matrix.append(column)
+        k += 1
+    return np.array(matrix)
+
+def check_stability(hurwitz_matrix, coefficients):
+    a=0
+    for _ in range(0, len(coefficients)-2):
+        x,y = hurwitz_matrix.shape
+        hurwitz_matrix= create_minor(np.array(hurwitz_matrix), x-1, y-1)
+        print(hurwitz_matrix)
+        print("Wyznacznik tej macierzy jest rowny: " +
+              str(np.linalg.det(hurwitz_matrix)))
+        if np.linalg.det(hurwitz_matrix) > 0:
+            continue
+        elif np.linalg.det(hurwitz_matrix) == 0:
+            print("Uklad na granicy stabilnosci")
+            continue
+        else:
+            print("Uklad jest niestabilny")
+            sys.exit()
+    print("Uklad jest stabilny.")
+
+def create_minor(matrix, row, column):
+    # usuwa i-ty wiersz i j-ta kolumne
+    return matrix[np.array(list(range(row))+list(range(row+1, matrix.shape[0])))[:,np.newaxis],
+               np.array(list(range(column))+list(range(column+1, matrix.shape[1])))]
 
 print("Jezeli wielomian mianownika jest zapisany jako: ")
 print("a0*s^n + a1*s^(n-1) + ... + a(n-1)*s + an")
 print("Podaj stopien mianownika")
 stopien = int(input('Stopien: '))
-A = []
+coefficients = []
 for x in range (0, stopien+1):
     wspolczynnik = int(input(str('Podaj wspolczynnik '+ 'a' + str(x) + ": ")))
-    A.append(int(wspolczynnik))
-print(A)
+    coefficients.append(int(wspolczynnik))
+print(coefficients)
 print("\nAby uklad mogl byc stabilny, wszystkie wspolczynniki rownania charakterystycznego musza byc wieksze od zera")
 matrix=[]
 k = 0
 
-for _ in range(0, len(A)-1):
+for _ in range(0, len(coefficients)-1):
     column = []
     d = 0
-    for _ in range(0, len(A)-1):
+    for _ in range(0, len(coefficients)-1):
         if 2*d+1-k < 0:
             column.append(0)
         else:
             try:
-                column.append(A[2*d+1-k])
+                column.append(coefficients[2*d+1-k])
             except IndexError:
                 column.append(0)
         d += 1
@@ -39,15 +87,11 @@ if np.linalg.det(np.array(matrix)) < 0:
 if np.linalg.det(np.array(matrix)) == 0:
     print("Uklad na granicy stabilnosci.")
 
-def minor(arr, i, j):
-    # usuwa i-ty wiersz i j-ta kolumne
-    return arr[np.array(list(range(i))+list(range(i+1, arr.shape[0])))[:,np.newaxis],
-               np.array(list(range(j))+list(range(j+1, arr.shape[1])))]
 a=0
 newmatrix=np.array(matrix)
-for _ in range(0, len(A)-2):
+for _ in range(0, len(coefficients)-2):
     x,y = newmatrix.shape
-    newmatrix= minor(np.array(newmatrix), x-1, y-1)
+    newmatrix= create_minor(np.array(newmatrix), x-1, y-1)
     print(newmatrix)
     print("Wyznacznik tej macierzy jest rowny: " +
           str(np.linalg.det(newmatrix)))
