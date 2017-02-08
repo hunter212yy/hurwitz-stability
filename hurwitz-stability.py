@@ -32,17 +32,17 @@ def check_stability(hurwitz_matrix, coefficients):
         x,y = hurwitz_matrix.shape
         hurwitz_matrix= create_minor(np.array(hurwitz_matrix), x-1, y-1)
         print(hurwitz_matrix)
-        print("Wyznacznik tej macierzy jest rowny: " +
+        print("Determinant of this matrix is equal: " +
               str(np.linalg.det(hurwitz_matrix)))
         if np.linalg.det(hurwitz_matrix) > 0:
             continue
         elif np.linalg.det(hurwitz_matrix) == 0:
-            print("Uklad na granicy stabilnosci")
+            print("System is marginally stable")
             continue
         else:
-            print("Uklad jest niestabilny")
+            print("System is unstable")
             sys.exit()
-    print("Uklad jest stabilny.")
+    print("System is stable")
 
 def create_minor(matrix, row, column):
     # usuwa i-ty wiersz i j-ta kolumne
