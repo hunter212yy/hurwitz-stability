@@ -9,11 +9,11 @@ import numpy as np
 import sys
 
 def create_hurwitz_matrix(coefficients):
+    k = 0
     matrix = []
     for _ in range(0, len(coefficients)-1):
         column = []
-        d = 0
-        for _ in range(0, len(coefficients)-1):
+        for d in range(0, len(coefficients)-1):
             if 2*d+1-k < 0:
                 column.append(0)
             else:
@@ -59,26 +59,10 @@ for x in range (0, stopien+1):
     coefficients.append(int(wspolczynnik))
 print(coefficients)
 print("\nAby uklad mogl byc stabilny, wszystkie wspolczynniki rownania charakterystycznego musza byc wieksze od zera")
-matrix=[]
-k = 0
-
-for _ in range(0, len(coefficients)-1):
-    column = []
-    d = 0
-    for _ in range(0, len(coefficients)-1):
-        if 2*d+1-k < 0:
-            column.append(0)
-        else:
-            try:
-                column.append(coefficients[2*d+1-k])
-            except IndexError:
-                column.append(0)
-        d += 1
-    matrix.append(column)
-    k += 1
+matrix=create_hurwitz_matrix(coefficients)
 
 print('Macierz Hurwitza: \n')
-print(np.array(matrix))
+print(matrix)
 print("Wyznacznik tej macierzy jest rowny: " +
       str(np.linalg.det(np.array(matrix))))
 if np.linalg.det(np.array(matrix)) < 0:
