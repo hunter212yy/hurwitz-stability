@@ -26,11 +26,32 @@ def create_hurwitz_matrix(coefficients):
         k += 1
     return np.array(matrix)
 
+#def check_matrix_determinant(matrix):
+#   check if the matrix denominator renders the system unstable or marginally
+#   stable
+
+def create_minor(matrix, row, column):
+    # removes the i-th row and the j-th column
+    return matrix[
+        np.array(list(range(row)) +
+                 list(range(row+1, matrix.shape[0])))[:,np.newaxis],
+        np.array(list(range(column)) +
+                 list(range(column+1, matrix.shape[1])))]
+
 def check_stability(hurwitz_matrix, coefficients):
-    a=0
+    print(hurwitz_matrix)
+    print("Determinant of this matrix is equal: "+
+          str(np.linalg.det(hurwitz_matrix)))
+    if np.linalg.det(hurwitz_matrix) > 0:
+        print("Determinant of the hurwitz matrix is greater than zero")
+    elif np.linalg.det(hurwitz_matrix) == 0:
+        print("System is marginally stable")
+    else:
+        return("System is unstable")
+
     for _ in range(0, len(coefficients)-2):
         x,y = hurwitz_matrix.shape
-        hurwitz_matrix= create_minor(np.array(hurwitz_matrix), x-1, y-1)
+        hurwitz_matrix= create_minor(hurwitz_matrix, x-1, y-1)
         print(hurwitz_matrix)
         print("Determinant of this matrix is equal: " +
               str(np.linalg.det(hurwitz_matrix)))
@@ -40,53 +61,23 @@ def check_stability(hurwitz_matrix, coefficients):
             print("System is marginally stable")
             continue
         else:
-            print("System is unstable")
-            sys.exit()
-    print("System is stable")
+            return("System is unstable")
+    return("System is stable")
 
-def create_minor(matrix, row, column):
-    # usuwa i-ty wiersz i j-ta kolumne
-    return matrix[np.array(list(range(row))+list(range(row+1, matrix.shape[0])))[:,np.newaxis],
-               np.array(list(range(column))+list(range(column+1, matrix.shape[1])))]
-
-print("Jezeli wielomian mianownika jest zapisany jako: ")
+print("If the polynomial of the denominator of the system's characteristic "
+      "equation (transfer function is given as: ")
 print("a0*s^n + a1*s^(n-1) + ... + a(n-1)*s + an")
-print("Podaj stopien mianownika")
-stopien = int(input('Stopien: '))
+print("Enter the degree of the denominator polynomial")
+degree = int(input('Degree: '))
 coefficients = []
-for x in range (0, stopien+1):
-    wspolczynnik = int(input(str('Podaj wspolczynnik '+ 'a' + str(x) + ": ")))
-    coefficients.append(int(wspolczynnik))
+for x in range (0, degree+1):
+    coefficient = int(input(str('Enter coefficient '+ 'a' + str(x) + ": ")))
+    coefficients.append(int(coefficient))
 print(coefficients)
-print("\nAby uklad mogl byc stabilny, wszystkie wspolczynniki rownania charakterystycznego musza byc wieksze od zera")
+print("To be stable, all of the system's denominator polynomial coefficients "
+      "must be greater than zero")
 matrix=create_hurwitz_matrix(coefficients)
 
-print('Macierz Hurwitza: \n')
-print(matrix)
-print("Wyznacznik tej macierzy jest rowny: " +
-      str(np.linalg.det(np.array(matrix))))
-if np.linalg.det(np.array(matrix)) < 0:
-    print("Uklad jest niestabilny.")
-    sys.exit()
-if np.linalg.det(np.array(matrix)) == 0:
-    print("Uklad na granicy stabilnosci.")
-
-a=0
-newmatrix=np.array(matrix)
-for _ in range(0, len(coefficients)-2):
-    x,y = newmatrix.shape
-    newmatrix= create_minor(np.array(newmatrix), x-1, y-1)
-    print(newmatrix)
-    print("Wyznacznik tej macierzy jest rowny: " +
-          str(np.linalg.det(newmatrix)))
-    if np.linalg.det(newmatrix) > 0:
-        continue
-    elif np.linalg.det(newmatrix) == 0:
-        print("Uklad na granicy stabilnosci")
-        continue
-    else:
-        print("Uklad jest niestabilny")
-        sys.exit()
-print("Uklad jest stabilny.")
-
-
+print('Hurwitz Matrix: \n')
+newmatrix=matrix
+print(check_stability(newmatrix, coefficients))
